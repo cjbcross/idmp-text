@@ -1,0 +1,23 @@
+<div>
+        <div id="toolbar">
+            <button class="btn btn-primary" type="button" onclick="window.location.reload();">Refresh Table</button>
+            <button class="btn btn-success" type="button" data-toggle="modal" data-target="#myModal" aria-label="Settings">Approve</button>
+        </div>
+    <table id="sasTable" name="sasTable"
+           data-toggle="table"
+           data-search="true"
+           data-show-toggle="true"
+           data-show-columns="true"
+           data-show-pagination-switch="true"
+           data-pagination="true"
+           data-click-to-select="true"
+           data-show-export="true"
+           data-toolbar="#toolbar"
+           data-filter-control="true"
+           data-filter-show-clear="true"
+           data-page-list="[10, 25, 50, 100, ALL]"
+           >
+    </table>
+</div>
+
+<script src="js/sasView.js"></script>

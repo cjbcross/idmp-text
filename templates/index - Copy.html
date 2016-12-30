@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <title>IDMP Text Extraction</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:300" rel="stylesheet">
+    <!-- JS -->
+    <script src="js/jquery-3.1.0.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <style>
+    .btn-primary{background-color:#184961;}
+
+    img.resize{
+        width:75px;
+        height:75px;
+    }
+
+    img.resize2{
+        height:25px;
+        width:60px;
+    }
+
+    .im-centered {
+          min-height: 50%;  /* Fallback for vh unit */
+          min-height: 50vh; /* You might also want to use
+                                'height' property instead.
+
+                                Note that for percentage values of
+                                'height' or 'min-height' properties,
+                                the 'height' of the parent element
+                                should be specified explicitly.
+
+                                In this case the parent of '.vertical-center'
+                                is the <body> element */
+
+          /* Make it a flex container */
+          display: -webkit-box;
+          display: -moz-box;
+          display: -ms-flexbox;
+          display: -webkit-flex;
+          display: flex;
+
+          /* Align the bootstrap's container vertically */
+            -webkit-box-align : center;
+          -webkit-align-items : center;
+               -moz-box-align : center;
+               -ms-flex-align : center;
+                  align-items : center;
+
+          /* In legacy web browsers such as Firefox 9
+             we need to specify the width of the flex container */
+          width: 100%;
+
+          /* Also 'margin: 0 auto' doesn't have any effect on flex items in such web browsers
+             hence the bootstrap's container won't be aligned to the center anymore.
+
+             Therefore, we should use the following declarations to get it centered again */
+                 -webkit-box-pack : center;
+                    -moz-box-pack : center;
+                    -ms-flex-pack : center;
+          -webkit-justify-content : center;
+                  justify-content : center;
+                  }
+
+      body { padding-top: 90px; }
+
+      .v-center {
+          min-height:200px;
+          display: flex;
+          justify-content:center;
+          flex-flow: column wrap;
+        }
+    </style>
+</head>
+
+<body style="font-family: 'Nunito', sans-serif;">
+
+<div class="navbar navbar-default navbar-fixed-top" style="background-color:#184961;">
+    <a class="navbar-brand" href="#" style="color:white;">SAS IDMP Portal</a>
+    <form action="/logout/" method="post">
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown" style="padding-right:10px;"><a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white;"><i class="fa fa-user" aria-hidden="true"></i> Logged in as John Smith <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                    <li style="padding-left: 10px;"><button type="submit" class="btn btn-default btn-sm navbar-btn">Log out</button></li>
+                </ul>
+            </li>
+            <li style="padding-top:12px;padding-right:27px;"><img class="resize2" src="{{ url_for('static', filename='sas-white.png') }}"></li>
+        </ul>
+    </form>
+</div>
+
+<div class="im-centered">
+    <div class="well" style="width:65%;text-align:center;">
+<h2><img class="resize" src="{{ url_for('static', filename='sas.jpg') }}"> Welcome to the IDMP Text Extraction Start Page</h2><p>&nbsp;</p>
+    <div class="row">
+        <a class="btn btn-primary btn-lg text-center" data-toggle="modal" data-target="#myModal1" aria-label="Settings">
+            <i class="fa fa-file-text fa-5x" aria-hidden="true"></i><br>&nbsp;<br>Import<br>Documents
+        </a>
+
+        <a class="btn btn-primary btn-lg text-center" data-toggle="modal" data-target="#myModal2" aria-label="Settings">
+            <i class="fa fa-check-square fa-5x" aria-hidden="true"></i><br>Select<br>Extraction<br>Variables
+        </a>
+
+        <a class="btn btn-primary btn-lg text-center" href="/sasView.html" aria-label="Settings">
+            <i class="fa fa-external-link fa-5x" aria-hidden="true"></i><br>View<br>Extracted<br>Text
+        </a>
+    </div>
+        <br>
+        <p><a href="http://www.sas.com/en_us/legal/copyright.html" target="_blank">© SAS Institute Inc. All Rights Reserved</a></p>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal1" role="dialog">
+    <div class="modal-dialog" style="width: 850px;">
+
+        <!-- Modal content-->
+        <div class="modal-content" style="width: 850px;">
+            <div class="modal-header" style="width: 850px;">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Select Variables</h4>
+            </div>
+            <div class="modal-body" style="width: 850px;">
+                <div class="container" style="width: 850px;">
+                    <div class="row">
+                        <div class="col-sm-4 col-sm-offset-1">
+                          <div class="list-group" id="list1-1">
+                              <a href="#" class="list-group-item active">Select All <input title="toggle all" class="all pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Atacand.doc <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Augabio.doc <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Betaferon.docx <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Byetta.pdf <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Caprelsa.txt <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Cresemba.doc <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Faslodex.txt <input class="pull-right" type="checkbox"></a>
+                              </div>
+                            </div>
+                            <div class="col-md-2 v-center">
+                                <button title="Send to list 2" class="btn btn-default center-block add"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                                <button title="Send to list 1" class="btn btn-default center-block remove"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                            </div>
+                            <div class="col-sm-4">
+                              <div class="list-group" id="list2-1">
+                              <a href="#" class="list-group-item active">Select All <input title="toggle all" class="all pull-right" type="checkbox"></a>
+                              </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="width: 850px;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="waitingDialog.show();setTimeout(function () {waitingDialog.hide();}, 4000);">Submit</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal2" role="dialog">
+    <div class="modal-dialog" style="width: 850px;">
+        <!-- Modal content-->
+        <div class="modal-content" style="width: 850px;">
+            <div class="modal-header" style="width: 850px;">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Select Variables</h4>
+            </div>
+            <div class="modal-body" style="width: 850px;">
+                <div class="container" style="width: 850px;">
+                    <div class="row">
+                        <div class="col-sm-4 col-sm-offset-1">
+                          <div class="list-group" id="list1">
+                              <a href="#" class="list-group-item active">Select All <input title="toggle all" class="all pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">ATC Code <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Active Ingredient <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Administered Dose Form <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Adverse Drug Reaction <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Color <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Combined Pharmaceutical Dose Form <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Container <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Contraindication <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Excipient <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Formulation <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Imprint <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Indicated Age <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Indicated Sex <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Interaction <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Medicinal Product Name <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Product Information <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Route of Administration <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Shelf Life <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Storage <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Strength <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Strength Range <input class="pull-right" type="checkbox"></a>
+                              <a href="#" class="list-group-item">Therapeutic Indication <input class="pull-right" type="checkbox"></a>
+                              </div>
+                            </div>
+                            <div class="col-md-2 v-center">
+                                <button title="Send to list 2" class="btn btn-default center-block add"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                                <button title="Send to list 1" class="btn btn-default center-block remove"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                            </div>
+                            <div class="col-sm-4">
+                              <div class="list-group" id="list2">
+                              <a href="#" class="list-group-item active">Select All <input title="toggle all" class="all pull-right" type="checkbox"></a>
+                              </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="width: 850px;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="waitingDialog2.show();setTimeout(function () {waitingDialog2.hide();}, 4000);">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$('.add').click(function(){
+    $('.all').prop("checked",false);
+    var items_1 = $("#list1-1 input:checked:not('.all')");
+    var n_1 = items_1.length;
+  	if (n_1 > 0) {
+      items_1.each(function(idx,item){
+        var choice_1 = $(item);
+        choice_1.prop("checked",false);
+        choice_1.parent().appendTo("#list2-1");
+      });
+  	}
+
+});
+
+$('.remove').click(function(){
+    $('.all').prop("checked",false);
+    var items_1 = $("#list2-1 input:checked:not('.all')");
+	items_1.each(function(idx,item){
+      var choice_1 = $(item);
+      choice_1.prop("checked",false);
+      choice_1.parent().appendTo("#list1-1");
+    });
+});
+
+/* toggle all checkboxes in group */
+$('.all').click(function(e){
+	e.stopPropagation();
+	var $this = $(this);
+    if($this.is(":checked")) {
+    	$this.parents('.list-group').find("[type=checkbox]").prop("checked",true);
+    }
+    else {
+    	$this.parents('.list-group').find("[type=checkbox]").prop("checked",false);
+        $this.prop("checked",false);
+    }
+});
+
+$('[type=checkbox]').click(function(e){
+  e.stopPropagation();
+});
+
+/* toggle checkbox when list group item is clicked */
+$('.list-group a').click(function(e){
+
+    e.stopPropagation();
+
+  	var $this = $(this).find("[type=checkbox]");
+    if($this.is(":checked")) {
+    	$this.prop("checked",false);
+    }
+    else {
+    	$this.prop("checked",true);
+    }
+
+    if ($this.hasClass("all")) {
+    	$this.trigger('click');
+    }
+});
+    </script>
+
+<script>
+$('.add').click(function(){
+    $('.all').prop("checked",false);
+    var items = $("#list1 input:checked:not('.all')");
+    var n = items.length;
+  	if (n > 0) {
+      items.each(function(idx,item){
+        var choice = $(item);
+        choice.prop("checked",false);
+        choice.parent().appendTo("#list2");
+      });
+  	}
+});
+
+$('.remove').click(function(){
+    $('.all').prop("checked",false);
+    var items = $("#list2 input:checked:not('.all')");
+	items.each(function(idx,item){
+      var choice = $(item);
+      choice.prop("checked",false);
+      choice.parent().appendTo("#list1");
+    });
+});
+
+/* toggle all checkboxes in group */
+$('.all').click(function(e){
+	e.stopPropagation();
+	var $this = $(this);
+    if($this.is(":checked")) {
+    	$this.parents('.list-group').find("[type=checkbox]").prop("checked",true);
+    }
+    else {
+    	$this.parents('.list-group').find("[type=checkbox]").prop("checked",false);
+        $this.prop("checked",false);
+    }
+});
+
+$('[type=checkbox]').click(function(e){
+  e.stopPropagation();
+});
+
+/* toggle checkbox when list group item is clicked */
+$('.list-group a').click(function(e){
+
+    e.stopPropagation();
+
+  	var $this = $(this).find("[type=checkbox]");
+    if($this.is(":checked")) {
+    	$this.prop("checked",false);
+    }
+    else {
+    	$this.prop("checked",true);
+    }
+
+    if ($this.hasClass("all")) {
+    	$this.trigger('click');
+    }
+});
+    </script>
+
+<script>
+/**
+ * Module for displaying "Waiting for..." dialog using Bootstrap
+ *
+ * @author Eugene Maslovich <ehpc@em42.ru>
+ */
+
+var waitingDialog = waitingDialog || (function ($) {
+    'use strict';
+
+	// Creating modal dialog's DOM
+	var $dialog = $(
+		'<div class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true" style="padding-top:15%; overflow-y:visible;">' +
+		'<div class="modal-dialog modal-m">' +
+		'<div class="modal-content">' +
+			'<div class="modal-header"><h3 style="margin:0;"></h3></div>' +
+			'<div class="modal-body">' +
+				'<div class="progress progress-striped active" style="margin-bottom:0;"><div class="progress-bar" style="width: 100%"></div></div>' +
+			'</div>' +
+		'</div></div></div>');
+
+	return {
+		/**
+		 * Opens our dialog
+		 * @param message Custom message
+		 * @param options Custom options:
+		 * 				  options.dialogSize - bootstrap postfix for dialog size, e.g. "sm", "m";
+		 * 				  options.progressType - bootstrap postfix for progress bar type, e.g. "success", "warning".
+		 */
+		show: function (message, options) {
+			// Assigning defaults
+			if (typeof options === 'undefined') {
+				options = {};
+			}
+			if (typeof message === 'undefined') {
+				message = 'Loading';
+			}
+			var settings = $.extend({
+				dialogSize: 'm',
+				progressType: '',
+				onHide: null // This callback runs after the dialog was hidden
+			}, options);
+
+			// Configuring dialog
+			$dialog.find('.modal-dialog').attr('class', 'modal-dialog').addClass('modal-' + settings.dialogSize);
+			$dialog.find('.progress-bar').attr('class', 'progress-bar');
+			if (settings.progressType) {
+				$dialog.find('.progress-bar').addClass('progress-bar-' + settings.progressType);
+			}
+			$dialog.find('h3').text(message);
+			// Adding callbacks
+			if (typeof settings.onHide === 'function') {
+				$dialog.off('hidden.bs.modal').on('hidden.bs.modal', function (e) {
+					settings.onHide.call($dialog);
+				});
+			}
+			// Opening dialog
+			$dialog.modal();
+		},
+		/**
+		 * Closes dialog
+		 */
+		hide: function () {
+			$dialog.modal('hide');
+		}
+	};
+
+})(jQuery);
+
+/**
+ * Module for displaying "Waiting for..." dialog using Bootstrap
+ *
+ * @author Eugene Maslovich <ehpc@em42.ru>
+ */
+
+var waitingDialog2 = waitingDialog2 || (function ($) {
+    'use strict';
+
+	// Creating modal dialog's DOM
+	var $dialog = $(
+		'<div class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true" style="padding-top:15%; overflow-y:visible;">' +
+		'<div class="modal-dialog modal-m">' +
+		'<div class="modal-content">' +
+			'<div class="modal-header"><h3 style="margin:0;"></h3></div>' +
+			'<div class="modal-body">' +
+				'<div class="progress progress-striped active" style="margin-bottom:0;"><div class="progress-bar" style="width: 100%"></div></div>' +
+			'</div>' +
+		'</div></div></div>');
+
+	return {
+		/**
+		 * Opens our dialog
+		 * @param message Custom message
+		 * @param options Custom options:
+		 * 				  options.dialogSize - bootstrap postfix for dialog size, e.g. "sm", "m";
+		 * 				  options.progressType - bootstrap postfix for progress bar type, e.g. "success", "warning".
+		 */
+		show: function (message, options) {
+			// Assigning defaults
+			if (typeof options === 'undefined') {
+				options = {};
+			}
+			if (typeof message === 'undefined') {
+				message = 'Running';
+			}
+			var settings = $.extend({
+				dialogSize: 'm',
+				progressType: '',
+				onHide: null // This callback runs after the dialog was hidden
+			}, options);
+
+			// Configuring dialog
+			$dialog.find('.modal-dialog').attr('class', 'modal-dialog').addClass('modal-' + settings.dialogSize);
+			$dialog.find('.progress-bar').attr('class', 'progress-bar');
+			if (settings.progressType) {
+				$dialog.find('.progress-bar').addClass('progress-bar-' + settings.progressType);
+			}
+			$dialog.find('h3').text(message);
+			// Adding callbacks
+			if (typeof settings.onHide === 'function') {
+				$dialog.off('hidden.bs.modal').on('hidden.bs.modal', function (e) {
+					settings.onHide.call($dialog);
+				});
+			}
+			// Opening dialog
+			$dialog.modal();
+		},
+		/**
+		 * Closes dialog
+		 */
+		hide: function () {
+			$dialog.modal('hide');
+		}
+	};
+
+})(jQuery);
+</script>
+
+</body>
+</html>
