@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
         <link href="https://fonts.googleapis.com/css?family=Nunito:300" rel="stylesheet">
         <link rel="stylesheet" href="css/bootstrap-editable.css">
+        <link rel="stylesheet" href="css/app.css">
 
         <!-- JS -->
         <script src="js/jquery-3.1.0.min.js"></script>
@@ -21,86 +22,68 @@
         <script src="js/bootstrap-table-editable.js"></script>
         <script src="js/bootstrap-editable.js"></script>
         <script src="js/bootstrap-table-filter-control.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
 
-        <style>
-        div.navdiv {
-            width: 100%;
-        }
-
-        div.maindiv {
-            padding-left: 15px;
-            padding-right: 15px;
-        }
-
-        .table {width: 75%; }
-
-        img.resize{
-            max-width:99%;
-        }
-
-        img.resize2{
-            height:25px;
-            width:60px;
-        }
-
-        .im-centered {
-              min-height: 50%;  /* Fallback for vh unit */
-              min-height: 50vh; /* You might also want to use
-                                    'height' property instead.
-
-                                    Note that for percentage values of
-                                    'height' or 'min-height' properties,
-                                    the 'height' of the parent element
-                                    should be specified explicitly.
-
-                                    In this case the parent of '.vertical-center'
-                                    is the <body> element */
-
-              /* Make it a flex container */
-              display: -webkit-box;
-              display: -moz-box;
-              display: -ms-flexbox;
-              display: -webkit-flex;
-              display: flex;
-
-              /* Align the bootstrap's container vertically */
-                -webkit-box-align : center;
-              -webkit-align-items : center;
-                   -moz-box-align : center;
-                   -ms-flex-align : center;
-                      align-items : center;
-
-              /* In legacy web browsers such as Firefox 9
-                 we need to specify the width of the flex container */
-              width: 100%;
-
-              /* Also 'margin: 0 auto' doesn't have any effect on flex items in such web browsers
-                 hence the bootstrap's container won't be aligned to the center anymore.
-
-                 Therefore, we should use the following declarations to get it centered again */
-                     -webkit-box-pack : center;
-                        -moz-box-pack : center;
-                        -ms-flex-pack : center;
-              -webkit-justify-content : center;
-                      justify-content : center;
-                      }
-
-          body { padding-top: 90px; }
-        </style>
     </head>
 
-    <body style="font-family: 'Nunito', sans-serif;"  ng-app="">
+    <body style="font-family: 'Nunito', sans-serif;">
 
-        <div ng-include src="'includes/myNav.html'"></div>
+    <div class="navbar navbar-default navbar-fixed-top" style="background-color:#184961;">
+        <a class="navbar-brand" href="/" style="color:white;">SAS IDMP Portal</a>
+        <form action="/logout/" method="post">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown" style="padding-right:10px;"><a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:white;"><i class="fa fa-user" aria-hidden="true"></i> Logged in as John Smith <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li style="padding-left: 10px;"><button type="submit" class="btn btn-default btn-sm navbar-btn">Log out</button></li>
+                    </ul>
+                </li>
+                <li style="padding-top:12px;padding-right:27px;"><img class="resize2" src="{{ url_for('static', filename='sas-white.png') }}"></li>
+            </ul>
+        </form>
+    </div>
 
-        <div class="maindiv">
-            <div ng-include src="'includes/myTable.html'"></div>
+    <div class="maindiv">
+        <div id="toolbar">
+            <button class="btn btn-primary" type="button" onclick="window.location.reload();">Refresh Table</button>
+            <button class="btn btn-success" type="button" data-toggle="modal" data-target="#myModal" aria-label="Settings">Approve</button>
         </div>
+        <table id="sasTable" name="sasTable"
+               data-toggle="table"
+               data-search="true"
+               data-show-toggle="false"
+               data-show-columns="true"
+               data-show-pagination-switch="true"
+               data-pagination="true"
+               data-click-to-select="true"
+               data-show-export="true"
+               data-toolbar="#toolbar"
+               data-filter-control="true"
+               data-filter-show-clear="true"
+               data-page-list="[10, 25, 50, 100, ALL]"
+               >
+        </table>
+    </div>
 
         <div class="modal fade" id="myModal" role="dialog">
-            <div ng-include src="'includes/myModal.html'"></div>
+            <!-- Modal -->
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <form action="/customers/" method="post" autocomplete="off">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Changes have been submitted.</h4>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                    </form>
+                </div>
+
+            </div>
         </div>
+    <script src="js/sasView.js"></script>
 
     </body>
 </html>
